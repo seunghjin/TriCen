@@ -26,7 +26,23 @@
       <a href="#" class="btn btn-lg btn-primary">View Live Calls</a>
     </div>
   </section>
-  
+<div class="container p-5">
+    <h1 class="m-5">Django  - Bootstrap 5 Table with Dynamic(API) Data</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for i in responses.users %}
+                <tr>
+                    <th >{{i.firstName}}</th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 <!-- 
   <main class="container my-5">
     <div id="namesContainer" class="row g-4"></div>
