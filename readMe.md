@@ -1,3 +1,3 @@
-# Our Project for Hack2025 - Sustainability Track
+# Hack2025 - Health Track
 
 ## Members: Chirag Biswas, Haruta Otaki, Satvik Matta, Seung Hyun Jin
