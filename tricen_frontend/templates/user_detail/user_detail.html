@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -12,8 +13,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">TriCen</div>
-        <button class="login-btn">Log Out</button>
+        <a href="{% url 'home' %}">
+            <div class="logo">TriCen</div>
+        </a>
     </nav>
     <div class="container">
         <div class="information">
@@ -103,5 +105,4 @@
         }
     </script>
 </body>
-
 </html>

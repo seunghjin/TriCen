@@ -43,7 +43,7 @@ def handle_incoming_call(request):
     )
     
     # Add prompts to the Gather
-    gather.say("Hi, My Name is TriCen. What's your name?")
+    gather.say("Hi, My Name is Tricen. What's your name?")
     # try:
     #     conversation = Conversation.objects.get(caller_id=call_sid)
     #     if conversation.needs_transfer:
