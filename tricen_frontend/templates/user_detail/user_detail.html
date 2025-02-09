@@ -1,25 +1,41 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Summary</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-  <link rel="stylesheet" href="{% static 'table.css' %}">
-  <link rel="stylesheet" href="{% static 'summary.css' %}">
-</head>
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'table.css' %}">
+    <link rel="stylesheet" href="{% static 'summary.css' %}">
+    </head>
 
-<body>
-    <nav class="navbar">
-        <div class="logo">TriCen</div>
-        <button class="login-btn">Log Out</button>
-      </nav>
-    <h1>User Summary</h1>
-    <p>Name: {{ user.name }}</p>
-    <p>Description: {{ user.small_description }}</p>
-    <p>Summary: {{ user.summary }}</p>
-    <a href="/">Pick up Call</a>
-</body>
+    <body>
+        <nav class="navbar">
+            <div class="logo">TriCen</div>
+            <button class="login-btn">Log Out</button>
+        </nav>
+        <div class="container">
+            <div class="header">
+                <div class="interviewee-name">
+                    Name: {{ user.name }}
+                </div>
+                <h1 class="page-title">Conversation History</h1>
+        </div>
+
+        <div class="description-section">
+            <div class="section-label">Topic: </div>
+            <div class="short-description">
+                {{ user.small_description }}
+            </div>
+        </div>
+        <div class="description-section">
+            <div class="section-label">Summary: </div>
+            <div class="long-description">
+                {{ user.summary }}
+            </div>
+        </div>
+        <a href="/">Pick up Call</a>
+    </body>
 </html>
