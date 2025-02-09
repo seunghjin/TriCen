@@ -4,6 +4,7 @@
     <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>User Summary</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{% static 'style.css' %}">
@@ -39,3 +40,107 @@
         <a href="/">Pick up Call</a>
     </body>
 </html>
+=======
+    <title>Conversation Detail</title>
+    <style>
+        .transfer-btn {
+            background-color: rgb(239, 68, 68);
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .transfer-btn:hover {
+            background-color: rgb(185, 28, 28);
+        }
+
+        .conversation-content {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 5px;
+        }
+
+        .user-message {
+            background-color: #f0f0f0;
+        }
+
+        .ai-message {
+            background-color: #e8f4f8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conversation Detail</h1>
+    <p>Phone Number: {{ conversation.phone_number }}</p>
+    <p>Call ID: {{ conversation.caller_id }}</p>
+    <p>Timestamp: {{ conversation.timestamp }}</p>
+
+    <div class="conversation-content">
+        <h2>Conversation History</h2>
+        {% for user_message, ai_message in conversation.messages %}
+            <div class="message user-message">
+                <strong>User:</strong> {{ user_message }}
+            </div>
+            <div class="message ai-message">
+                <strong>AI:</strong> {{ ai_message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <button 
+        onclick="transferCall('{{ conversation.caller_id }}')"
+        class="transfer-btn">
+        Transfer to Agent
+    </button>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        async function transferCall(callSid) {
+            try {
+                const response = await fetch(`/api/transfer/${callSid}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    alert('Transfer initiated successfully');
+                } else {
+                    alert('Transfer failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error initiating transfer:', error);
+                alert('Error initiating transfer');
+            }
+        }
+    </script>
+</body>
+</html>
+>>>>>>> 0e79e5397afd00bcd9210d73999b9488cec85338

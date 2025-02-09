@@ -23,6 +23,8 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+TRANSFER_NUMBER = os.getenv('TRANSFER_NUMBER')
+
 @csrf_exempt
 @require_POST
 def handle_incoming_call(request):
@@ -41,7 +43,16 @@ def handle_incoming_call(request):
     )
     
     # Add prompts to the Gather
-    gather.say("Hi, My Name is Tricen. What's your name?")
+    gather.say("Hi, My Name is TriCen. What's your name?")
+    # try:
+    #     conversation = Conversation.objects.get(caller_id=call_sid)
+    #     if conversation.needs_transfer:
+    #         response.say("Connecting you with a representative. Please hold.")
+    #         dial = response.dial()
+    #         dial.number(TRANSFER_NUMBER)  # Replace with your support number
+    #         return HttpResponse(str(response), content_type='text/xml')
+    # except Conversation.DoesNotExist:
+    #     pass  # If conversation doesn't exist, continue with normal flow
     
     # Add the Gather to the response
     response.append(gather)
@@ -72,6 +83,16 @@ def handle_transcription_result(request):
 
     print(f"Speech result: {speech_result}")
     
+    try:
+        conversation = Conversation.objects.get(caller_id=call_sid)
+        if conversation.needs_transfer:
+            response.say("Connecting you with a representative. Please hold.")
+            dial = response.dial()
+            dial.number(TRANSFER_NUMBER)
+            return HttpResponse(str(response), content_type='text/xml')
+    except Conversation.DoesNotExist:
+        pass  # If conversation doesn't exist, continue with normal flow
+
     if speech_result:
         try:
             # Get GPT response
@@ -272,4 +293,34 @@ def get_conversation(request, caller_id):
         return JsonResponse({
             'error': 'An error occurred while retrieving the conversation'
         }, status=500)
+
+@csrf_exempt
+def initiate_transfer(request, call_sid):
+    try:
+        # Create a TwiML response
+        response = VoiceResponse()
         
+        # Add transfer message
+        response.say("Transferring you to a human representative. Please hold.")
+        
+        # Implement the transfer
+        dial = response.dial()
+        # Replace with your actual support number
+        dial.number(TRANSFER_NUMBER)
+        
+        # Update the conversation status if needed
+        conversation = Conversation.objects.get(caller_id=call_sid)
+        conversation.needs_transfer = True
+        conversation.transfer_reason = "Manual transfer initiated from dashboard"
+        conversation.save()
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Transfer initiated',
+            'twiml': str(response)
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
