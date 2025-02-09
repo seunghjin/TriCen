@@ -2,3 +2,5 @@
 test.py
 *.mp3
 staticfiles/
+*.sqlite3
+t.py
