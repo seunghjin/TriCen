@@ -4,3 +4,4 @@ test.py
 staticfiles/
 *.sqlite3
 t.py
+*.mp4
