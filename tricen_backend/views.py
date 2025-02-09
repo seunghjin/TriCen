@@ -207,50 +207,69 @@ def get_conversations(request):
         print(f"Error in get_conversations: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
 
-def get_conversation(request):
+def get_conversation(request, caller_id):
     try:
-        conversation = Conversation.objects.get(caller_id=request.GET.get('caller_id'))
-        data = [{
-            'caller_id': conv.caller_id,
-            'phone_number': conv.phone_number,
-            'contentUser': conv.get_user_content(),
-            'contentAI': conv.get_ai_content(),
-        } for conv in conversation]
+        # Get single conversation by caller_id
+        conversation = Conversation.objects.get(caller_id=caller_id)
+        
+        # Get the conversation content
+        contentUser = conversation.get_user_content()
+        contentAI = conversation.get_ai_content()
 
-        contentUser = data[0]['contentUser']
-        contentAI = data[0]['contentAI']
-
+        # Build the conversation script
         overall_script = ""
-
         for i in range(len(contentUser)):
             overall_script += f"User: {contentUser[i]}\n"
             if i < len(contentAI):
                 overall_script += f"AI: {contentAI[i]}\n"
-        
-        # send the overall script to openai and get the response summary
-        system_prompt = "Your one goal is to provide a brief summary of the conversation. Your output should have the following format: 'Name: [name], Small_Description: [small description of the problem the user is having], Summary: [summary of overall conversation]' Do not include any other information in your response."
+
+        # Get summary from GPT
+        system_prompt = """Your one goal is to provide a brief summary of the conversation. 
+            Your output should have the following format: 
+            'Name: [name], Small_Description: [small description of the problem the user is having], 
+            Summary: [summary of overall conversation, make sure to include key details and turning points if any]' 
+            Do not include any other information in your response."""
+            
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": overall_script}
         ]
+        
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4",
             messages=messages
         )
         summary = response.choices[0].message.content
 
-        parsed_summary = summary.split(", ")
-        name = parsed_summary[0].split(": ")[1]
-        small_description = parsed_summary[1].split(": ")[1]
-        summary = parsed_summary[2].split(": ")[1]
+        # Parse the summary
+        try:
+            parsed_summary = summary.split(", ")
+            name = parsed_summary[0].split(": ")[1]
+            small_description = parsed_summary[1].split(": ")[1]
+            summary = parsed_summary[2].split(": ")[1]
+        except IndexError:
+            # Handle malformed summary gracefully
+            name = "Unknown"
+            small_description = "Conversation in progress"
+            summary = "Unable to generate summary"
 
         return JsonResponse({
             'name': name,
             'small_description': small_description,
-            'summary': summary
+            'summary': summary,
+            'conversation': {
+                'user_messages': contentUser,
+                'ai_messages': contentAI
+            }
         })
-    except ObjectDoesNotExist:
-        return JsonResponse({'error': 'Conversation not found'}, status=404)
+        
+    except Conversation.DoesNotExist:
+        return JsonResponse({
+            'error': f'Conversation with ID {caller_id} not found'
+        }, status=404)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        logger.error(f"Error in get_conversation: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'error': 'An error occurred while retrieving the conversation'
+        }, status=500)
         
