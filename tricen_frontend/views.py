@@ -5,4 +5,5 @@ from django.http import HttpResponse
 
 
 def hello(request):
-    return HttpResponse("Hello, world!")
+    # call our api/conversation and return the response
+    return HttpResponse("Hello, world. You're at the frontend index.")

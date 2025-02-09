@@ -41,7 +41,7 @@ def handle_incoming_call(request):
     )
     
     # Add prompts to the Gather
-    gather.say("Please speak your message. I will transcribe it for you.")
+    gather.say("Hi, My Name is Tricen. What's your name?")
     
     # Add the Gather to the response
     response.append(gather)
@@ -63,6 +63,8 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 def handle_transcription_result(request):
     speech_result = request.POST.get('SpeechResult')
     confidence = float(request.POST.get('Confidence', 0))
+    call_sid = request.POST.get('CallSid')
+    caller = request.POST.get('Caller')
     
     logger.debug(f"Received speech: {speech_result} with confidence: {confidence}")
     
@@ -76,8 +78,20 @@ def handle_transcription_result(request):
             message = get_gpt_response(speech_result)
             print(f"GPT Response: {message}")
             
-            # First, say the message as a fallback
-            # response.say(message)
+
+            #db changes start
+            conversation, created = Conversation.objects.get_or_create(
+                caller_id=call_sid,
+                defaults={
+                    'phone_number': caller,
+                    'contentUser': '[]',
+                    'contentAI': '[]'
+                }
+            )
+            conversation.add_user_message(speech_result)
+            conversation.add_ai_message(message)
+
+            #db chages end
             
             # Generate TTS audio and save to temp file
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.mp3')
@@ -173,3 +187,70 @@ def get_gpt_response(user_input):
         return f"Error with OpenAI API: {e}"
     except Exception as e:
         return f"Unexpected error: {e}"
+
+from django.http import JsonResponse
+from .models import Conversation
+from django.core.exceptions import ObjectDoesNotExist
+
+def get_conversations(request):
+    try:
+        conversations = Conversation.objects.all()
+        data = [{
+            'caller_id': conv.caller_id,
+            'phone_number': conv.phone_number,
+            'contentUser': conv.get_user_content(),
+            'contentAI': conv.get_ai_content(),
+            'timestamp': conv.timestamp.isoformat()
+        } for conv in conversations]
+        return JsonResponse(data, safe=False)
+    except Exception as e:
+        print(f"Error in get_conversations: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+def get_conversation(request):
+    try:
+        conversation = Conversation.objects.get(caller_id=request.GET.get('caller_id'))
+        data = [{
+            'caller_id': conv.caller_id,
+            'phone_number': conv.phone_number,
+            'contentUser': conv.get_user_content(),
+            'contentAI': conv.get_ai_content(),
+        } for conv in conversation]
+
+        contentUser = data[0]['contentUser']
+        contentAI = data[0]['contentAI']
+
+        overall_script = ""
+
+        for i in range(len(contentUser)):
+            overall_script += f"User: {contentUser[i]}\n"
+            if i < len(contentAI):
+                overall_script += f"AI: {contentAI[i]}\n"
+        
+        # send the overall script to openai and get the response summary
+        system_prompt = "Your one goal is to provide a brief summary of the conversation. Your output should have the following format: 'Name: [name], Small_Description: [small description of the problem the user is having], Summary: [summary of overall conversation]' Do not include any other information in your response."
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": overall_script}
+        ]
+        response = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=messages
+        )
+        summary = response.choices[0].message.content
+
+        parsed_summary = summary.split(", ")
+        name = parsed_summary[0].split(": ")[1]
+        small_description = parsed_summary[1].split(": ")[1]
+        summary = parsed_summary[2].split(": ")[1]
+
+        return JsonResponse({
+            'name': name,
+            'small_description': small_description,
+            'summary': summary
+        })
+    except ObjectDoesNotExist:
+        return JsonResponse({'error': 'Conversation not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+        
