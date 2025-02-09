@@ -1,0 +1,308 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.5rem;
+    background: white;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FF0083;
+}
+
+.login-btn {
+    padding: 0.8rem 2rem;
+    background: #FF0083;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.3s;
+}
+
+.login-btn:hover {
+    transform: scale(1.05);
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #FF0083, #FF4EAC);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.cta-button {
+    padding: 1.2rem 3rem;
+    font-size: 1.2rem;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button:hover {
+    background: white;
+    color: #FF0083;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+.cta-button:active {
+    transform: translateY(0);
+}
+
+.problems {
+    padding: 6rem 2rem;
+    background: #f9f9f9;
+    position: relative;
+    min-height: 600px;
+}
+
+.problems-intro {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    text-align: center;
+}
+
+.problems-intro h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.problems-intro p {
+    font-size: 1.2rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+
+.circle {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    padding: 1.5rem;
+    width: 200px; /* Fixed size for perfect circles */
+    height: 200px; /* Fixed size for perfect circles */
+    opacity: 0;
+    transform: scale(0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.circle:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.circle:nth-child(1) {
+    width: 200px;
+    height: 200px;
+    left: 5%;
+    bottom: 10%;
+}
+
+.circle:nth-child(2) {
+    width: 180px;
+    height: 180px;
+    left: 27.5%;
+    top: 40%;
+}
+
+.circle:nth-child(3) {
+    width: 160px;
+    height: 160px;
+    left: 40%;
+    bottom: 2.5%;
+}
+
+.circle:nth-child(4) {
+    width: 220px;
+    height: 220px;
+    right: 2.5%;
+    bottom: 2.5%;
+}
+
+.circle:nth-child(5) {
+    width: 190px;
+    height: 190px;
+    right: 25%;
+    bottom: 30%;
+}
+
+.circle p {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 0.5rem;
+}
+
+.circle strong {
+    display: block;
+    font-size: 1.5rem;
+    color: #FF0083;
+    margin-bottom: 0.5rem;
+}
+
+.features {
+    padding: 6rem 2rem;
+    background: white;
+}
+
+.feature-step {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 4rem auto;
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.feature-image {
+    width: 250px;
+    height: 250px;
+    background: #f5f5f5;
+    border-radius: 20px;
+    margin-right: 4rem;
+    display: flex; /* Make it a flex container */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    margin: 0 auto; /* Center the image horizontally within its parent container */
+}
+
+.feature-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.feature-content p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+.contact {
+    padding: 6rem 2rem;
+    background: #f9f9f9;
+}
+
+.contact h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #333;
+    text-align: left;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 4rem;
+}
+
+.contact-info {
+    flex: 1;
+}
+
+.contact-item {
+    margin-bottom: 2rem;
+}
+
+.contact-item h4 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.contact-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.contact-form {
+    flex: 2;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.contact-form textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.contact-form button {
+    padding: 1rem 3rem;
+    background: #FF0083;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.contact-form button:hover {
+    transform: scale(1.05);
+}

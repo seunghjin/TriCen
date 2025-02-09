@@ -2,6 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import requests
 
+def home(request):
+    return render(request, 'home/index.html')    
+
 def dashboard(request):
     responses = requests.get('https://dummyjson.com/users').json()
     return render(request, 'dashboard/dashboard.html', {'responses':responses})
