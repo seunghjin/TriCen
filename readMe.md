@@ -1,4 +1,4 @@
 # Hack2025 - Health Track
 
-## Members: Chirag Biswas, Haruta Otaki, Satvik Matta, Seung Hyun Jin
+## Members: Haruta Otaki, Satvik Matta, Seung Hyun Jin
 
