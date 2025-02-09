@@ -8,7 +8,7 @@ def home(request):
 def dashboard(request):
     responses = requests.get('https://dummyjson.com/users').json()
     return render(request, 'dashboard/dashboard.html', {'responses':responses})
-
+  
 def user_detail(request, id):
     responses = requests.get('https://dummyjson.com/users').json()
     user = None
@@ -19,4 +19,4 @@ def user_detail(request, id):
     if user is None:
         return HttpResponse("User not found", status=404)
     else:
-        return render(request, 'user_detail/user_detail.html', {'user': user})    
+        return render(request, 'user_detail/user_detail.html', {'user': user})
