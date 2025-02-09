@@ -86,9 +86,13 @@ def handle_transcription_result(request):
     try:
         conversation = Conversation.objects.get(caller_id=call_sid)
         if conversation.needs_transfer:
+            conversation.delete()
             response.say("Connecting you with a representative. Please hold.")
             dial = response.dial()
             dial.number(TRANSFER_NUMBER)
+
+            # delete the conversation after transfer
+
             return HttpResponse(str(response), content_type='text/xml')
     except Conversation.DoesNotExist:
         pass  # If conversation doesn't exist, continue with normal flow
