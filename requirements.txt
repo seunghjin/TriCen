@@ -335,3 +335,7 @@ Werkzeug==2.2.3
 xattr==0.9.9
 xgboost==1.6.2
 yarl==1.9.2
+dj-database-url
+gunicorn
+whitenoise
+psycopg2-binary
