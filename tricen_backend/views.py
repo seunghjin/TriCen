@@ -20,8 +20,8 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+from openai import OpenAI
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 TRANSFER_NUMBER = os.getenv('TRANSFER_NUMBER')
 

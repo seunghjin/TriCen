@@ -15,7 +15,7 @@ importlib-metadata>=6.0.0
 
 # Your app-specific packages (based on your project)
 twilio==8.8.0
-openai==0.28.0
+openai>=1.30.0
 channels
 python-decouple==3.8
 python-dotenv
