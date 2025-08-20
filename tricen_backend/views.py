@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = openai(api_key=OPENAI_API_KEY)
 
 TRANSFER_NUMBER = os.getenv('TRANSFER_NUMBER')
 
