@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 import tempfile
 
-from openai import OpenAI
+import openai
 from urllib.parse import urljoin
 
 import logging
